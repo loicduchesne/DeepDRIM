@@ -2,6 +2,8 @@
 from __future__ import print_function
 
 
+import os
+import math
 import pandas as pd
 from numpy import *
 import numpy as np
@@ -26,7 +28,7 @@ parser.add_argument('-TF_divide_pos_file', default=None, help='File that indicat
 parser.add_argument('-TF_num', type=int, default=None, help='To generate representation for this number of TFs. Should be a integer that equal or samller than the number of TFs in the pairs_for_predict_file.')
 parser.add_argument('-TF_order_random', default=False, help='If the TF_num samller than the number of TFs in the pairs_for_predict_file, we need to indicate TF_order_random, if TF_order_random=True, then the code will generate representation for randomly selected TF_num TFs.')
 
-parser.add_argument('-top_or_random', default="top_cov", help='Decide how to select the neighbor images. Can be set as "top_cov","top_corr", "random")
+parser.add_argument('-top_or_random', default="top_cov", help='Decide how to select the neighbor images. Can be set as "top_cov","top_corr", "random"')
 parser.add_argument('-get_abs', default=False, help="Select neighbor images by considering top value or top absolute value.")
 
 
@@ -398,6 +400,7 @@ class RepresentationTest2:
 
                 print("xx",shape(xx))
 
+                os.makedirs(os.path.dirname(save_header + '_xdata.npy'), exist_ok=True) # Makes directory if doesnt exist
                 print("save",save_header)
                 np.save(save_header+'_xdata.npy',xx)
                 np.save(save_header + '_ydata.npy', np.array(ydata))

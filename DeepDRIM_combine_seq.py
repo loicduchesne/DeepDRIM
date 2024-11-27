@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser(description="example")
 
 #args = parser.parse_args()
 from numba import jit, cuda
-import tensorflow.keras as keras
+import tf_keras
 import tensorflow as tf
 
 #from tensorflow.python.client import device_lib
@@ -29,12 +29,12 @@ import tensorflow as tf
 #keras.backend.set_session(sess)
 
 
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
-from tensorflow.keras.layers import Conv2D, MaxPooling2D
-from tensorflow.keras.optimizers import SGD
-from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
+from tf_keras.preprocessing.image import ImageDataGenerator
+from tf_keras.models import Sequential
+from tf_keras.layers import Dense, Dropout, Activation, Flatten
+from tf_keras.layers import Conv2D, MaxPooling2D
+from tf_keras.optimizers import SGD
+from tf_keras.callbacks import EarlyStopping,ModelCheckpoint
 import os,sys
 import numpy as np
 import matplotlib
@@ -141,8 +141,8 @@ class direct_model1_squarematrix:
         else:
             self.save_dir="."
         if self.num_classes > 2:
-            self.y_train = keras.utils.to_categorical(self.y_train, self.num_classes)
-            self.y_test = keras.utils.to_categorical(self.y_test, self.num_classes)
+            self.y_train = tf_keras.utils.to_categorical(self.y_train, self.num_classes)
+            self.y_test = tf_keras.utils.to_categorical(self.y_test, self.num_classes)
         print(self.y_train.shape, 'y_train samples')
         print(self.y_test.shape, 'y_test samples')
         ############
@@ -158,29 +158,29 @@ class direct_model1_squarematrix:
             # model.add(Conv2D(32, (3, 3)))
         # model.add(keras.layers.Dense(32, input_dim=32))
         # model.add(Conv2D(32, (3, 3), padding='same', input_shape=x_train.shape[1:]))
-        input_img = keras.layers.Input(shape=x_train.shape[1:])
-        x=keras.layers.Conv2D(32, (3, 3), padding='same',activation='relu')(input_img)
-        x=keras.layers.Conv2D(32, (3, 3),activation='relu')(x)
-        x=keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
-        x=keras.layers.Dropout(0.25)(x)
+        input_img = tf_keras.layers.Input(shape=x_train.shape[1:])
+        x=tf_keras.layers.Conv2D(32, (3, 3), padding='same',activation='relu')(input_img)
+        x=tf_keras.layers.Conv2D(32, (3, 3),activation='relu')(x)
+        x=tf_keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+        x=tf_keras.layers.Dropout(0.25)(x)
 
-        x = keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
-        x = keras.layers.Conv2D(64, (3, 3), activation='relu')(x)
-        x = keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
-        x = keras.layers.Dropout(0.25)(x)
+        x = tf_keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+        x = tf_keras.layers.Conv2D(64, (3, 3), activation='relu')(x)
+        x = tf_keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+        x = tf_keras.layers.Dropout(0.25)(x)
 
-        x = keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
-        x = keras.layers.Conv2D(128, (3, 3), activation='relu')(x)
-        x = keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
-        x = keras.layers.Dropout(0.25)(x)
+        x = tf_keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+        x = tf_keras.layers.Conv2D(128, (3, 3), activation='relu')(x)
+        x = tf_keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+        x = tf_keras.layers.Dropout(0.25)(x)
 
-        x=keras.layers.Flatten()(x)
+        x=tf_keras.layers.Flatten()(x)
 
-        model_out=keras.layers.Dense(512)(x)
+        model_out=tf_keras.layers.Dense(512)(x)
 
         #model.add(Activation('relu'))
         #model.add(Dropout(0.5))
-        return keras.Model(input_img,model_out)
+        return tf_keras.Model(input_img,model_out)
 
     def get_pair_image_model(self,x_train):
         ############
@@ -188,29 +188,29 @@ class direct_model1_squarematrix:
         # model.add(Conv2D(32, (3, 3)))
         # model.add(keras.layers.Dense(32, input_dim=32))
         # model.add(Conv2D(32, (3, 3), padding='same', input_shape=x_train.shape[1:]))
-        input_img = keras.layers.Input(shape=x_train.shape[1:])
-        x = keras.layers.Conv2D(32, (3, 3), padding='same', activation='relu')(input_img)
-        x = keras.layers.Conv2D(32, (3, 3), activation='relu')(x)
-        x = keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
-        x = keras.layers.Dropout(0.25)(x)
+        input_img = tf_keras.layers.Input(shape=x_train.shape[1:])
+        x = tf_keras.layers.Conv2D(32, (3, 3), padding='same', activation='relu')(input_img)
+        x = tf_keras.layers.Conv2D(32, (3, 3), activation='relu')(x)
+        x = tf_keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+        x = tf_keras.layers.Dropout(0.25)(x)
 
-        x = keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
-        x = keras.layers.Conv2D(64, (3, 3), activation='relu')(x)
-        x = keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
-        x = keras.layers.Dropout(0.25)(x)
+        x = tf_keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+        x = tf_keras.layers.Conv2D(64, (3, 3), activation='relu')(x)
+        x = tf_keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+        x = tf_keras.layers.Dropout(0.25)(x)
 
-        x = keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
-        x = keras.layers.Conv2D(128, (3, 3), activation='relu')(x)
-        x = keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
-        x = keras.layers.Dropout(0.25)(x)
+        x = tf_keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu')(x)
+        x = tf_keras.layers.Conv2D(128, (3, 3), activation='relu')(x)
+        x = tf_keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+        x = tf_keras.layers.Dropout(0.25)(x)
 
-        x = keras.layers.Flatten()(x)
+        x = tf_keras.layers.Flatten()(x)
 
-        model_out = keras.layers.Dense(512)(x)
+        model_out = tf_keras.layers.Dense(512)(x)
 
         # model.add(Activation('relu'))
         # model.add(Dropout(0.5))
-        return keras.Model(input_img,model_out)
+        return tf_keras.Model(input_img,model_out)
 
     def construct_model(self, x_train,x_seq=None):
         ############
@@ -225,52 +225,52 @@ class direct_model1_squarematrix:
         x3=x_train[:, (n-1):n, :, :,np.newaxis]
 
         seq_mat_model=self.get_single_image_model(x3)
-        input_seq_mat = keras.layers.Input(shape=x3.shape[1:])
+        input_seq_mat = tf_keras.layers.Input(shape=x3.shape[1:])
         seq_mat_out = single_image_model(input_seq_mat)
 
 
         single_image_model=self.get_single_image_model(x1)
-        input_img_single = keras.layers.Input(shape=x1.shape[1:])
+        input_img_single = tf_keras.layers.Input(shape=x1.shape[1:])
         single_image_out = single_image_model(input_img_single)
 
 
         pair_image_model = self.get_pair_image_model(x2_1)
 
-        input_img = keras.layers.Input(shape=x2.shape[1:])
+        input_img = tf_keras.layers.Input(shape=x2.shape[1:])
         pair_image_out_list=[]
         input_img_whole_list=[]
         input_img_whole_list.append(input_img_single)
         input_img_multi_list=[]
         for i in range(0,n-1):
-            input_img_multi = keras.layers.Input(shape=x2_1.shape[1:])
+            input_img_multi = tf_keras.layers.Input(shape=x2_1.shape[1:])
             input_img_multi_list.append(input_img_multi)
             input_img_whole_list.append(input_img_multi)
             pair_image_out=pair_image_model(input_img_multi)
 
             pair_image_out_list.append(pair_image_out)
-        merged_vector=keras.layers.concatenate(pair_image_out_list[:], axis=-1)#modify this sentence to merge
-        merged_model=keras.Model(input_img_multi_list,merged_vector)
+        merged_vector=tf_keras.layers.concatenate(pair_image_out_list[:], axis=-1)#modify this sentence to merge
+        merged_model=tf_keras.Model(input_img_multi_list,merged_vector)
         merged_out=merged_model(input_img_multi_list)
 
-        combined_layer = keras.layers.concatenate([single_image_out, merged_out,seq_mat_out], axis=-1)
-        combined_layer = keras.layers.Dropout(0.5)(combined_layer)
+        combined_layer = tf_keras.layers.concatenate([single_image_out, merged_out,seq_mat_out], axis=-1)
+        combined_layer = tf_keras.layers.Dropout(0.5)(combined_layer)
 
-        combined = keras.layers.Dense(512, activation='relu')(combined_layer)
-        combined = keras.layers.Dropout(0.5)(combined)
+        combined = tf_keras.layers.Dense(512, activation='relu')(combined_layer)
+        combined = tf_keras.layers.Dropout(0.5)(combined)
 
-        combined = keras.layers.Dense(128, activation='relu')(combined)
-        combined = keras.layers.Dropout(0.5)(combined)
+        combined = tf_keras.layers.Dense(128, activation='relu')(combined)
+        combined = tf_keras.layers.Dropout(0.5)(combined)
         if self.num_classes < 2:
             print('no enough categories')
             sys.exit()
         elif self.num_classes == 2:
-            combined=keras.layers.Dense(1, activation='sigmoid')(combined)
+            combined=tf_keras.layers.Dense(1, activation='sigmoid')(combined)
 
-            model = keras.Model(input_img_whole_list, combined)
+            model = tf_keras.Model(input_img_whole_list, combined)
             sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
             model.compile(optimizer=sgd, loss='binary_crossentropy', metrics=['accuracy'])
 
-        early_stopping = keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=10, verbose=0, mode='auto')
+        early_stopping = tf_keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=10, verbose=0, mode='auto')
         checkpoint1 = ModelCheckpoint(filepath=self.save_dir + '/weights.{epoch:02d}-{val_loss:.2f}.hdf5',
                                       monitor='val_loss',
                                       verbose=1, save_best_only=False, save_weights_only=False, mode='auto', period=1)
