@@ -7,6 +7,7 @@ Tested on macOS Sequoia 15.2 on an M3 Pro.
 
 ### Requirements
 - Python 3.10 (tested on 3.10.15)
+- tqdm
 - TensorFlow (*pip install tensorflow*)
 - legacy Keras 2 (*pip install tf_keras*)
 
