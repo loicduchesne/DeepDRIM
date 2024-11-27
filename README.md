@@ -1,3 +1,47 @@
+# DeepDRIM-Python-3.10
+### *Compatibility update for PBMC-CTL Dataset & Python 3.10*
+
+This repository is a compatibility fork of the original DeepDRIM implementation. The code was modified to work on a newer Python version, as well as some issues fixed that were not compatible in 3.10. A new data pre-processing script was created as "PBMC_data_convert.py", in order to properly work with PBMC-CTL Dataset (in contrast to the original which only supported GTRD).
+
+Tested on macOS Sequoia 15.2 on an M3 Pro.
+
+### Requirements
+- Python 3.10 (tested on 3.10.15)
+- TensorFlow (*pip install tensorflow*)
+- legacy Keras 2 (*pip install tf_keras*)
+
+---
+### How to use?
+All the script maintain the same entry points as the original DeepDRIM, except for the new *PBMC_data_convert.py*.
+
+#### How to use: 
+- Make sure to **create the data folders before** referencing their path when you run the command for data_convert.
+- Adjust the epochs and batch configuration if needed.
+
+#### How to use: *PBMC_data_convert.py*
+Specific note on this script. Its implementation is very rudimentary and has not been tested extensively.
+
+**Important: modify main method in PBMC_data_convert.py to set to your own paths**:
+
+```python
+if __name__ == "__main__":
+    # Initialize and run the conversion
+    converter = PBMC_CTL_DataConvert()
+    converter.work_pbmc_ctl_to_positive_pairs(
+        expr_file="{INSERT PROCESSED DATA OUTPUT PATH HERE}/PBMC-CTL_100_cells.csv",
+        grn_file="{INSERT PROCESSED DATA SOURCE PATH HERE}/PBMC-CTL_Imposed_GRN.csv",
+        output_prefix="{INSERT PROCESSED DATA OUTPUT PATH HERE}/PBMC-CTL"
+    )
+```
+
+
+---
+### To fix:
+- Better printing statements and notebook integration
+- Re-structuring the scripts entry points
+- Porting to PyTorch for more up-to-date parallelization
+___
+*Original Description (2021):*
 # DeepDRIM
 
 This work is publish in: https://academic.oup.com/bib/article-abstract/22/6/bbab325/6356429 .
