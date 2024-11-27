@@ -1,3 +1,4 @@
+import random
 import numpy as np
 import pandas as pd
 import scipy.sparse
@@ -58,24 +59,43 @@ class PBMC_CTL_DataConvert:
         else:
             print("Gene names are not loaded. Cannot generate geneName_map.txt.")
 
-    def generate_training_pairs(self, output_file, randomize=False):
+    def generate_training_pairs(self, output_file, negative_sample_ratio=1.0, randomize=False):
         """Generates training pairs with positive and placeholder negative examples."""
+
+        # Positive pairs (1)
         positive_pairs = pd.DataFrame(
             [pair.split(",") + [1] for pair in self.positive_pair],
             columns=["GeneA", "GeneB", "Label"]
         )
 
-        # Placeholder for negative pairs
+        # Reverse pairs (2)
+        reverse_pairs = pd.DataFrame({
+            "GeneA": positive_pairs["GeneB"],
+            "GeneB": positive_pairs["GeneA"],
+            "Label": [2] * len(positive_pairs),
+        })
+
+        # Combine positive and reverse pairs
+        all_pairs = pd.concat([positive_pairs, reverse_pairs])
+
+        # Negative pairs (0)
+        gene_list = list(self.geneNames)
+        num_negative_samples = int(len(all_pairs) * negative_sample_ratio)
+
+        negative_pairs = []
+        for _ in range(num_negative_samples):
+            gene_a, gene_b = random.sample(gene_list, 2)
+            if not ((gene_a, gene_b) in all_pairs.values or (gene_b, gene_a) in all_pairs.values):
+                negative_pairs.append((gene_a, gene_b, 0))
+
+        negative_pairs_df = pd.DataFrame(negative_pairs, columns=["GeneA", "GeneB", "Label"])
+
+        # Combine all
+        training_data = pd.concat([all_pairs, negative_pairs_df])
+
+        # Shuffle
         if randomize:
-            shuffled_genes = np.random.permutation(self.geneNames)
-            negative_pairs = pd.DataFrame({
-                "GeneA": shuffled_genes[:len(positive_pairs)],
-                "GeneB": shuffled_genes[len(positive_pairs):2 * len(positive_pairs)],
-                "Label": [0] * len(positive_pairs),
-            })
-            training_data = pd.concat([positive_pairs, negative_pairs])
-        else:
-            training_data = positive_pairs
+            training_data = training_data.sample(frac=1).reset_index(drop=True)
 
         training_data.to_csv(output_file, sep="\t", index=False, header=False)
         print(f"Training pairs saved to {output_file}.")
@@ -94,7 +114,7 @@ if __name__ == "__main__":
     # Initialize and run the conversion
     converter = PBMC_CTL_DataConvert()
     converter.work_pbmc_ctl_to_positive_pairs(
-        expr_file="data/PBMC-CTL_100_cells.csv",
+        expr_file="data/PBMC-CTL_1000_cells.csv",
         grn_file="data/PBMC-CTL_Imposed_GRN.csv",
-        output_prefix="DeepDRIM/data_processed/PBMC-CTL"
+        output_prefix="out/DeepDRIM/processed/PBMC-CTL"
     )
