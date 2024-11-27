@@ -44,6 +44,7 @@ import pandas as pd
 
 parser = argparse.ArgumentParser(description="")
 
+parser.add_argument('-num_epochs', type=int, required=True, default=None, help="Number of epochs.")
 parser.add_argument('-num_batches', type=int, required=True, default=None, help="Number of TF or the number of x file.")
 parser.add_argument('-data_path', required=True, default=None, help="The path that includes x file, y file and z file.")
 parser.add_argument('-output_dir', required=True, default="./output/", help="Indicate the path for output.")
@@ -628,7 +629,9 @@ def main():
     #output_dir="out_DeepDRIM_topcov10/"
     #cross_validation_fold_divide_file="cross_validation_fold_divide.txt"
 
-    tcs = direct_model1_squarematrix(num_batches=args.num_batches,
+    tcs = direct_model1_squarematrix(
+        num_epochs=args.num_epochs,
+        num_batches=args.num_batches,
         data_path=args.data_path,
         output_dir=args.output_dir)
     indel_list0,indel_list1,indel_list2=load_indel_lists_from_file(args.cross_validation_fold_divide_file, tcs)
