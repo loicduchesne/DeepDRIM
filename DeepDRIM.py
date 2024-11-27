@@ -28,7 +28,7 @@ from tf_keras.preprocessing.image import ImageDataGenerator
 from tf_keras.models import Sequential
 from tf_keras.layers import Dense, Dropout, Activation, Flatten
 from tf_keras.layers import Conv2D, MaxPooling2D
-from tf_keras.optimizers.legacy import SGD # Update to compat.
+from tf_keras.optimizers import SGD # Update to compat.
 from tf_keras.callbacks import EarlyStopping,ModelCheckpoint
 import os,sys
 import numpy as np
@@ -56,13 +56,13 @@ args = parser.parse_args()
 
 
 class direct_model1_squarematrix:
-    def __init__(self, num_batches=5, output_dir=None, data_path=None, predict_output_dir=None):
+    def __init__(self, num_epochs=200, num_batches=5, output_dir=None, data_path=None, predict_output_dir=None):
         # ###################################### parameter settings
         self.data_augmentation = False
         # num_predictions = 20
         self.batch_size = 32  # mini batch for training
         # num_classes = 3   # ### categories of labels
-        self.epochs = 200  # ### iterations of trainning, with GPU 1080, 200 for KEGG and Reactome, depends on specific tasks for GTRD, we actually selected
+        self.epochs = num_epochs  # ### iterations of trainning, with GPU 1080, 200 for KEGG and Reactome, depends on specific tasks for GTRD, we actually selected
         # the best epochs and learning rate by a test on the first three TF in list
         # length_TF =3057  # number of divide data parts
         # num_predictions = 20
@@ -251,7 +251,7 @@ class direct_model1_squarematrix:
             combined=tf_keras.layers.Dense(1, activation='sigmoid')(combined)
 
             model = tf_keras.Model(input_img_whole_list, combined)
-            sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+            sgd = SGD(lr=0.01, momentum=0.9, nesterov=True) # Removed decay for compat.
             model.compile(optimizer=sgd, loss='binary_crossentropy', metrics=['accuracy'])
 
         early_stopping = tf_keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=10, verbose=0, mode='auto')
@@ -430,7 +430,7 @@ class direct_model1_squarematrix:
             mean_fpr = np.linspace(0, 1, 100)  # 3068
             for jj in range(len(self.count_set) - 1):  # len(count_set)-1):
                 if self.count_set[jj] < self.count_set[jj + 1]:
-                    print(test_indel, jj, count_set[jj], count_set[jj + 1])
+                    print(test_indel, jj, count_set[jj], count_set[jj + 1]) # TODO: Not sure what's happening here..
                     y_test = y_testy[count_set[jj]:count_set[jj + 1]]
                     y_predict = y_predicty[count_set[jj]:count_set[jj + 1]]
                     # Score trained model.
